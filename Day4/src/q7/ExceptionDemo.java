@@ -1,6 +1,5 @@
 package q7;
 
-import java.io.IOException;
 import java.util.InputMismatchException;
 
 public class ExceptionDemo {
