@@ -1,4 +1,4 @@
-package com.lab.java8.case_study2;
+package case_study2;
 
 import static java.util.stream.Collectors.toList;
 
@@ -16,7 +16,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import com.lab.java8.case_study2.Dish.Type;
+import case_study2.Dish.Type;
 
 public class DishTesterExaple2 {
 	
@@ -27,9 +27,24 @@ public class DishTesterExaple2 {
 
 		List<Dish> allDishes = getAllDishes();
 		// Example: return the names of dishes that are low in calories (<400) sorted by number of calories
-
+		List<String> dishesWithLowCalories=
+				allDishes
+				.stream()
+				.filter(d->d.getCalories()<400)
+				.map(n->n.getName())
+				.collect(Collectors.toList());
+		
+		System.out.println(dishesWithLowCalories);
+		
 		// Getting all veg dishes
-	
+		List<String> dishesWithLowCalories=
+				allDishes
+				.stream()
+				.filter(d->d)
+				.map(n->n.getName())
+				.collect(Collectors.toList());
+		
+		System.out.println(dishesWithLowCalories);
 		// Get list of All Dishes only containing name and calValue
 		
 		// create a List by selecting the first three dishes that have more than 300 calories

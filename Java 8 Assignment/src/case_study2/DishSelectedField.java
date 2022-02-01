@@ -1,4 +1,4 @@
-package com.lab.java8.case_study2;
+package case_study2;
 
 public class DishSelectedField {
 	

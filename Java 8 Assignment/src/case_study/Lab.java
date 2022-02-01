@@ -2,11 +2,14 @@ package case_study;
 
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.BinaryOperator;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.*;
@@ -53,47 +56,94 @@ public class Lab {
 //			skip3Books.forEach(b -> System.out.println(b));
 		
 		// 5. We need to get all the publishing years
-//			
-//			List<Book> publishingYears=allBooks
-//					.stream()
-//					.map(b -> b.getYear())
-//					.collect(toList());
-//			
-//			skip3Books.forEach(b -> System.out.println(b));
+			
+			List<Integer> publishingYears=allBooks
+					.stream()
+					.map(b -> b.getYear())
+					.collect(toList());
+			
+//			publishingYears.forEach(b -> System.out.println(b));
 			
 		// 6. We need all the authors names who have written a book	
-
+			
+			List<String> authorNames=allBooks
+					.stream()
+					.flatMap(b -> b.getAuthors().stream())
+					.map(a -> a.getName())
+					.distinct()
+					.collect(toList());
+					
+//			authorNames.forEach(b -> System.out.println(b));
 			
 		// We want to know if all the books are written by more than one author? boolean
-			
-			
-		//is all the elements of array are odd?
-			
+			boolean moreThanOneAuthor=allBooks
+					.stream()
+					.allMatch(b -> b.getAuthors().size()>1);
+					
+//			System.out.println(moreThanOneAuthor);
 			
 		// We want one of the books written by more than one author.? (findAny)
-	
+			Optional<Book> oneBook=allBooks
+					.stream()
+					.parallel()
+					.filter(b -> b.getAuthors().size()>1)
+					.findAny();
+
+//			System.out.println(oneBook.get());
+			
 		// We want to know how many pages the longest book has.
 
-	
-		// We want the average number of pages of the books
+			Optional<Integer> longestBook=allBooks
+					.stream()
+					.map(b-> b.getPages())
+					.reduce(Integer::max);
 			
+//			System.out.println(longestBook.get());
+					
+		// We want the average number of pages of the books
+			Double averagePages=allBooks
+					.stream()
+					.collect(Collectors.averagingInt(b -> b.getPages()));
+			
+//			System.out.println(averagePages);
 		
 		// We want all the titles of the books
-
-		//all tiles print : java , adv c#, 
-		
+			String allTitles=allBooks
+					.stream()
+					.map(b->b.getTitle())
+					.collect(Collectors.joining(" "));
+			
+//			System.out.println(allTitles);
 	
 		// We want the book with the higher number of authors?
-
+			Optional<Book> bookWrittenByHighestAuthors=allBooks
+					.stream()
+					.collect(Collectors.maxBy(Comparator.comparing(b->b.getAuthors().size())));
 	
+//			System.out.println(bookWrittenByHighestAuthors.get());
 		// We want a Map of book per year.
-
+			Map<Integer ,List<Book>> bookPerYear=
+					allBooks
+					.stream()
+					.collect(Collectors.groupingBy(b->b.getYear()));
+			
+//			System.out.println(bookPerYear);
+			
 		// We want a Map of book per year and then by subject
-		
+			Map<Object,Map<Object ,List<Book>>> bookPerYearPerTttle=
+					allBooks
+					.stream()
+					.collect(Collectors.groupingBy(b->b.getYear(),groupingBy(c->c.getTitle())));
+			
+//			System.out.println(bookPerYearPerTttle);
+			
 		// We want to count how many books are published per year.
-
-	
-
+			
+			Map<Integer , Long> bookCountPerYear= allBooks
+					.stream()
+					.collect(Collectors.groupingBy(b->b.getYear(),counting()));
+			
+			System.out.println(bookCountPerYear);
 	}
 
 	private static List<Book> loadAllBooks() {
